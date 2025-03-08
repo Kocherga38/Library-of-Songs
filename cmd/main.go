@@ -1,32 +1,31 @@
 package main
 
 import (
-
-	// _ "github.com/Kocherga38/Library-of-Songs/internal/database/migrations"
-
 	"log"
 
+	"github.com/Kocherga38/Library-of-Songs/internal/database"
 	"github.com/Kocherga38/Library-of-Songs/internal/routes"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func main() {
-	// db, err := database.InitDB()
-	// if err != nil {
-	// 	log.Fatal("Failed to connect to database:", err)
-	// }
+	db, err := database.InitDB()
+	if err != nil {
+		log.Fatal("Failed to connect to database:", err)
+	}
 
-	router := setupRouter()
+	router := setupRouter(db)
 
 	log.Println("Server is successfully started!")
 	router.Run(":3000")
 }
 
-func setupRouter() *gin.Engine {
+func setupRouter(db *gorm.DB) *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("./web/templates/*")
 
-	routes.SetupRoutes(router)
+	routes.SetupRoutes(router, db)
 
 	return router
 }
