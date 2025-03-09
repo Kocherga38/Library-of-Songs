@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetSongByName(db gorm.DB) gin.HandlerFunc {
+func GetSongByName(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		songName := c.Param("song")
 
