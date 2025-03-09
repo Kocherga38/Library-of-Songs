@@ -17,6 +17,12 @@ func PostSong(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
+		var existingSong models.Song
+		if err := db.Where("song = ?", song.Song).First(&existingSong).Error; err == nil {
+			c.JSON(http.StatusConflict, gin.H{"error": "Song with this name already exists"})
+			return
+		}
+
 		if err := db.Create(&song).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create song"})
 			return
