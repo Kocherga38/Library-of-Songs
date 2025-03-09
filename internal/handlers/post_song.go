@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateSong(db *gorm.DB) gin.HandlerFunc {
+func PostSong(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var song models.Song
 

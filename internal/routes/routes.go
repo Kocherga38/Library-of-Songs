@@ -9,6 +9,7 @@ import (
 
 func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/", handlers.HomeHandler)
-	router.POST("/song", handlers.CreateSong(db))
+	router.POST("/song", handlers.PostSong(db))
 	router.GET("/songs", handlers.GetSongs(db))
+	router.DELETE("/song/:song", handlers.DeleteSong(db))
 }
