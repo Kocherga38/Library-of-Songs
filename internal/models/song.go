@@ -7,5 +7,5 @@ import (
 type Song struct {
 	gorm.Model
 	Group string `json:"group"`
-	Title string `json:"title"`
+	Song  string `json:"song" gorm:"unique"`
 }
