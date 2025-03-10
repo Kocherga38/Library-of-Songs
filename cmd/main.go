@@ -1,12 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/Kocherga38/Library-of-Songs/internal/database"
 	"github.com/Kocherga38/Library-of-Songs/internal/routes"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 func main() {
@@ -14,6 +14,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
+	defer db.Close()
 
 	router := setupRouter(db)
 
@@ -21,7 +22,7 @@ func main() {
 	router.Run(":3000")
 }
 
-func setupRouter(db *gorm.DB) *gin.Engine {
+func setupRouter(db *sql.DB) *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("./web/templates/*")
 

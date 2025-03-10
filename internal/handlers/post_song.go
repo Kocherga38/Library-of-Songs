@@ -1,14 +1,15 @@
 package handlers
 
 import (
+	"database/sql"
+	"log"
 	"net/http"
 
 	"github.com/Kocherga38/Library-of-Songs/internal/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func PostSong(db *gorm.DB) gin.HandlerFunc {
+func PostSong(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var song models.Song
 
@@ -18,16 +19,28 @@ func PostSong(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		var existingSong models.Song
-		if err := db.Where("song = ?", song.Song).First(&existingSong).Error; err == nil {
+		query := "SELECT id, \"group\", song FROM songs WHERE song = $1"
+		err := db.QueryRow(query, song.Song).Scan(&existingSong.ID, &existingSong.Song, &existingSong.Group)
+		if err == nil {
 			c.JSON(http.StatusConflict, gin.H{"error": "Song with this name already exists"})
 			return
 		}
 
-		if err := db.Create(&song).Error; err != nil {
+		if err != sql.ErrNoRows {
+			log.Println("Error while checking song existence:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check song existence"})
+			return
+		}
+
+		insertQuery := "INSERT INTO songs (\"group\", song) VALUES ($1, $2) RETURNING id"
+		var newID int
+		err = db.QueryRow(insertQuery, song.Group, song.Song).Scan(&newID)
+		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create song"})
 			return
 		}
 
+		song.ID = newID
 		c.JSON(http.StatusCreated, song)
 	}
 }

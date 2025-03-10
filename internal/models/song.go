@@ -1,11 +1,7 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Song struct {
-	gorm.Model
+	ID    int    `json:"id"`
 	Group string `json:"group"`
-	Song  string `json:"song" gorm:"unique"`
+	Song  string `json:"song"`
 }
