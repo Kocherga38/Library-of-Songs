@@ -13,4 +13,5 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/songs", handlers.GetSongs(db))
 	router.GET("/song/:song", handlers.GetSongByName(db))
 	router.DELETE("/song/:song", handlers.DeleteSong(db))
+	router.PATCH("/song/:song", handlers.UpdateSongByName(db))
 }
