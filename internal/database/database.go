@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/Kocherga38/Library-of-Songs/internal/models"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
@@ -27,5 +28,12 @@ func InitDB() (*gorm.DB, error) {
 	}
 
 	log.Println("Successfully connected to the database")
+
+	if err = db.AutoMigrate(&models.Song{}); err != nil {
+		log.Fatal("Error migrating database:", err)
+	}
+
+	log.Println("Database migrated successfully")
+
 	return db, nil
 }
