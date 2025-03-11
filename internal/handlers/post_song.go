@@ -13,6 +13,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @BasePath /song
+
+// PostSong godoc
+// @Summary Create a new song
+// @Description This endpoint allows you to create a new song, page with it and store it in the database.
+// @Tags Songs
+// @Accept json
+// @Produce json
+// @Param song body models.Song true "Song Info"
+// @Success 201 {object} models.Song
+// @Failure 400 {object} models.ErrorResponse "Invalid JSON format"
+// @Failure 409 {object} models.ErrorResponse "Song with this name already exists"
+// @Failure 500 {object} models.ErrorResponse "Failed to create song"
+// @Router /song [post]
 func PostSong(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		log.Println("[INFO] Starting the song creation process...")
@@ -29,7 +43,7 @@ func PostSong(db *sql.DB) gin.HandlerFunc {
 		var existingSong models.Song
 		log.Printf("[INFO] Checking if song %s already exists", song.Song)
 		query := "SELECT id, \"group\", song, lyrics FROM songs WHERE song = $1"
-		err := db.QueryRow(query, song.Song).Scan(&existingSong.ID, &existingSong.Song, &existingSong.Group, &existingSong.Lyrics)
+		err := db.QueryRow(query, song.Song).Scan(&existingSong.ID, &existingSong.Group, &existingSong.Song, &existingSong.Lyrics)
 		if err == nil {
 			log.Printf("[INFO] Song with name %s already exists", song.Song)
 			c.JSON(http.StatusConflict, gin.H{"error": "Song with this name already exists"})

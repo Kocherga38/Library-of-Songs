@@ -1,0 +1,67 @@
+definitions:
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  models.Song:
+    properties:
+      group:
+        type: string
+      id:
+        type: integer
+      lyrics:
+        type: string
+      song:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      description: Home page
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Home page
+      tags:
+      - Home
+  /song:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint allows you to create a new song, page with it and
+        store it in the database.
+      parameters:
+      - description: Song Info
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.Song'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Invalid JSON format
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "409":
+          description: Song with this name already exists
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Failed to create song
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Create a new song
+      tags:
+      - songs
+swagger: "2.0"

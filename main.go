@@ -4,9 +4,12 @@ import (
 	"database/sql"
 	"log"
 
+	docs "github.com/Kocherga38/Library-of-Songs/docs"
 	"github.com/Kocherga38/Library-of-Songs/internal/database"
 	"github.com/Kocherga38/Library-of-Songs/internal/routes"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -39,10 +42,12 @@ func setupRouter(db *sql.DB) *gin.Engine {
 	log.Println("[INFO] Loading HTML templates for the router...")
 
 	router := gin.Default()
+	docs.SwaggerInfo.BasePath = "/"
 	router.LoadHTMLGlob("./web/templates/*")
 
 	log.Println("[INFO] Setting up routes...")
 	routes.SetupRoutes(router, db)
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	log.Println("[DEBUG] Router setup complete.")
 

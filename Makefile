@@ -1,5 +1,5 @@
 run:
-	go build -o main.exe ./cmd
+	go build -o main.exe .
 	./main.exe
 
 .PHONY: run
