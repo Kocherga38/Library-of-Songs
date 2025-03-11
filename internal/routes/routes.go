@@ -18,5 +18,7 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 	router.GET("/song/:song", handlers.GetSongByName(db))
 	router.PATCH("/song/:song", handlers.UpdateSongByName(db))
 
+	router.Static("/songs", "./public/songs")
+
 	log.Println("[INFO] Routes have been successfully set up")
 }

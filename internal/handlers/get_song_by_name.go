@@ -17,8 +17,9 @@ func GetSongByName(db *sql.DB) gin.HandlerFunc {
 		log.Printf("[INFO] Fetching song with name: %s", songName)
 
 		var song models.Song
-		query := "SELECT id, song, \"group\" FROM songs WHERE song = $1"
-		err := db.QueryRow(query, songName).Scan(&song.ID, &song.Song, &song.Group)
+		query := "SELECT id, song, \"group\", lyrics FROM songs WHERE song = $1"
+		err := db.QueryRow(query, songName).Scan(&song.ID, &song.Song, &song.Group, &song.Lyrics)
+
 		if err == sql.ErrNoRows {
 			log.Printf("[INFO] Song with name %s not found", songName)
 			c.JSON(http.StatusNotFound, gin.H{"error": "Song not found"})
@@ -30,6 +31,6 @@ func GetSongByName(db *sql.DB) gin.HandlerFunc {
 		}
 
 		log.Printf("[INFO] Successfully fetched song: %s", songName)
-		c.JSON(http.StatusOK, song)
+		c.HTML(http.StatusOK, "song.html", song)
 	}
 }

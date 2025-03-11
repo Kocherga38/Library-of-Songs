@@ -22,8 +22,8 @@ func DeleteSong(db *sql.DB) gin.HandlerFunc {
 
 		var song models.Song
 		log.Printf("[DEBUG] Querying song with name: %s", songName)
-		query := "SELECT id, song, \"group\" FROM songs WHERE song = $1"
-		err := db.QueryRow(query, songName).Scan(&song.ID, &song.Song, &song.Group)
+		query := "SELECT id, song, \"group\", lyrics FROM songs WHERE song = $1"
+		err := db.QueryRow(query, songName).Scan(&song.ID, &song.Song, &song.Group, &song.Lyrics)
 		if err == sql.ErrNoRows {
 			log.Printf("[INFO] Song with name %s not found", songName)
 			c.JSON(http.StatusNotFound, gin.H{"error": "Song not found"})

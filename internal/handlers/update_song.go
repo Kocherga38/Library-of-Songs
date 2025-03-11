@@ -22,8 +22,8 @@ func UpdateSongByName(db *sql.DB) gin.HandlerFunc {
 		log.Printf("[INFO] Fetching song with name: %s", songName)
 
 		var existingSong models.Song
-		query := "SELECT id, song, \"group\" FROM songs WHERE song = $1"
-		err := db.QueryRow(query, songName).Scan(&existingSong.ID, &existingSong.Song, &existingSong.Group)
+		query := "SELECT id, song, \"group\", lyrics FROM songs WHERE song = $1"
+		err := db.QueryRow(query, songName).Scan(&existingSong.ID, &existingSong.Song, &existingSong.Group, &existingSong.Lyrics)
 		if err == sql.ErrNoRows {
 			log.Printf("[INFO] Song %s not found", songName)
 			c.JSON(http.StatusNotFound, gin.H{"error": "Song not found"})
@@ -61,6 +61,12 @@ func UpdateSongByName(db *sql.DB) gin.HandlerFunc {
 			paramCount++
 		}
 
+		if lyrics, ok := updateData["lyrics"]; ok {
+			setValues = append(setValues, "lyrics = $"+strconv.Itoa(paramCount))
+			params = append(params, lyrics)
+			paramCount++
+		}
+
 		if len(setValues) == 0 {
 			log.Println("[INFO] No valid fields to update")
 			c.JSON(http.StatusBadRequest, gin.H{"error": "No valid fields to update"})
@@ -83,15 +89,22 @@ func UpdateSongByName(db *sql.DB) gin.HandlerFunc {
 			newSongName = songName
 		}
 
-		log.Printf("[INFO] Fetching updated song with name: %s", newSongName)
-		if err := db.QueryRow(query, newSongName).Scan(&existingSong.ID, &existingSong.Song, &existingSong.Group); err != nil {
-			log.Printf("[ERROR] Error while fetching updated song: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve updated song"})
-			return
+		// log.Printf("[INFO] Fetching updated song with name: %s", newSongName)
+		// if err := db.QueryRow(query, newSongName).Scan(&existingSong.ID, &existingSong.Song, &existingSong.Group); err != nil {
+		// 	log.Printf("[ERROR] Error while fetching updated song: %v", err)
+		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve updated song"})
+		// 	return
+		// }
+
+		updatedSong := models.Song{
+			ID:     existingSong.ID,
+			Song:   newSongName,
+			Group:  updateData["group"].(string),
+			Lyrics: updateData["lyrics"].(string),
 		}
 
-		log.Printf("[INFO] Song updated successfully: %+v", existingSong)
-		c.JSON(http.StatusOK, existingSong)
+		log.Printf("[INFO] Song updated successfully: %+v", updatedSong)
+		c.JSON(http.StatusOK, updatedSong)
 	}
 }
 

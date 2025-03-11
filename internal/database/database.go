@@ -47,7 +47,8 @@ func migrate(db *sql.DB) error {
 	CREATE TABLE IF NOT EXISTS songs (
 		"id" SERIAL PRIMARY KEY,
 		"group" VARCHAR(255) NOT NULL,
-		"song" VARCHAR(255) UNIQUE NOT NULL
+		"song" VARCHAR(255) UNIQUE NOT NULL,
+		"lyrics" TEXT NOT NULL
 	);`
 
 	log.Println("[DEBUG] Executing table creation query...")

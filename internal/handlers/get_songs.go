@@ -16,7 +16,7 @@ func GetSongs(db *sql.DB) gin.HandlerFunc {
 		var songs []models.Song
 
 		log.Println("[DEBUG] Executing query to fetch all songs")
-		rows, err := db.Query("SELECT id, \"group\", song FROM songs")
+		rows, err := db.Query("SELECT id, \"group\", song, lyrics FROM songs")
 		if err != nil {
 			log.Printf("[ERROR] Error while fetching songs: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
@@ -27,7 +27,7 @@ func GetSongs(db *sql.DB) gin.HandlerFunc {
 		log.Println("[INFO] Iterating over the rows of songs")
 		for rows.Next() {
 			var song models.Song
-			if err := rows.Scan(&song.ID, &song.Group, &song.Song); err != nil {
+			if err := rows.Scan(&song.ID, &song.Group, &song.Song, &song.Lyrics); err != nil {
 				log.Printf("[ERROR] Error scanning song: %v", err)
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read songs"})
 				return
