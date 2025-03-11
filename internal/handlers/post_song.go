@@ -67,26 +67,35 @@ func PostSong(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
-// TODO: write info and update logs
 func createSongPage(song models.Song) error {
+	log.Println("[INFO] Starting to create song page for:", song.Song)
+
 	template, err := template.ParseFiles("templates/song.html")
 	if err != nil {
+		log.Printf("[ERROR] Failed to parse template: %v", err)
 		return err
 	}
+	log.Println("[DEBUG] Template parsed successfully")
 
 	outputDir := "public/songs"
+	log.Printf("[INFO] Ensuring the output directory (%s) exists", outputDir)
 	err = os.MkdirAll(outputDir, os.ModePerm)
 	if err != nil {
+		log.Printf("[ERROR] Failed to create directory: %v", err)
 		return err
 	}
+	log.Println("[DEBUG] Output directory created/verified successfully")
 
 	filename := filepath.Join(outputDir, fmt.Sprintf("%s.html", song.Song))
+	log.Printf("[INFO] Creating song file: %s", filename)
 	file, err := os.Create(filename)
 	if err != nil {
+		log.Printf("[ERROR] Failed to create file: %v", err)
 		return err
 	}
 	defer file.Close()
 
+	log.Printf("[DEBUG] Writing data to song page file for song: %s", song.Song)
 	err = template.Execute(file, gin.H{
 		"Song":   song.Song,
 		"Group":  song.Group,
@@ -94,8 +103,10 @@ func createSongPage(song models.Song) error {
 	})
 
 	if err != nil {
+		log.Printf("[ERROR] Failed to execute template: %v", err)
 		return err
 	}
 
+	log.Println("[INFO] Song page created successfully for:", song.Song)
 	return nil
 }
