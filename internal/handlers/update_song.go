@@ -89,13 +89,6 @@ func UpdateSongByName(db *sql.DB) gin.HandlerFunc {
 			newSongName = songName
 		}
 
-		// log.Printf("[INFO] Fetching updated song with name: %s", newSongName)
-		// if err := db.QueryRow(query, newSongName).Scan(&existingSong.ID, &existingSong.Song, &existingSong.Group); err != nil {
-		// 	log.Printf("[ERROR] Error while fetching updated song: %v", err)
-		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve updated song"})
-		// 	return
-		// }
-
 		updatedSong := models.Song{
 			ID:     existingSong.ID,
 			Song:   newSongName,
