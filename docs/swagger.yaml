@@ -10,10 +10,12 @@ definitions:
         type: string
       id:
         type: integer
-      lyrics:
-        type: string
       song:
         type: string
+      verses:
+        items:
+          type: string
+        type: array
     type: object
 info:
   contact: {}

@@ -288,11 +288,14 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "lyrics": {
-                    "type": "string"
-                },
                 "song": {
                     "type": "string"
+                },
+                "verses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         }

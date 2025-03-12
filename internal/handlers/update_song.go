@@ -15,7 +15,7 @@ import (
 // @Description This endpoint updates the details of a song in the database by its name.
 // @Tags Songs
 // @Accept json
-// @Produce jsonф
+// @Produce json
 // @Param song path string true "Song Name"
 // @Param song body map[string]interface{} true "Updated song information"
 // @Success 200 {object} models.Song "Updated song information"
@@ -35,8 +35,8 @@ func UpdateSongByName(db *sql.DB) gin.HandlerFunc {
 		log.Printf("[INFO] Fetching song with name: %s", songName)
 
 		var existingSong models.Song
-		query := "SELECT id, song, \"group\", lyrics FROM songs WHERE song = $1"
-		err := db.QueryRow(query, songName).Scan(&existingSong.ID, &existingSong.Song, &existingSong.Group, &existingSong.Lyrics)
+		query := "SELECT id, song, \"group\", verses FROM songs WHERE song = $1"
+		err := db.QueryRow(query, songName).Scan(&existingSong.ID, &existingSong.Song, &existingSong.Group, &existingSong.Verses)
 		if err == sql.ErrNoRows {
 			log.Printf("[INFO] Song %s not found", songName)
 			c.JSON(http.StatusNotFound, gin.H{"error": "Song not found"})
@@ -74,9 +74,9 @@ func UpdateSongByName(db *sql.DB) gin.HandlerFunc {
 			paramCount++
 		}
 
-		if lyrics, ok := updateData["lyrics"]; ok {
-			setValues = append(setValues, "lyrics = $"+strconv.Itoa(paramCount))
-			params = append(params, lyrics)
+		if verses, ok := updateData["verses"]; ok {
+			setValues = append(setValues, "verses = $"+strconv.Itoa(paramCount))
+			params = append(params, verses)
 			paramCount++
 		}
 
@@ -106,7 +106,7 @@ func UpdateSongByName(db *sql.DB) gin.HandlerFunc {
 			ID:     existingSong.ID,
 			Song:   newSongName,
 			Group:  updateData["group"].(string),
-			Lyrics: updateData["lyrics"].(string),
+			Verses: updateData["verses"].([]string),
 		}
 
 		log.Printf("[INFO] Song updated successfully: %+v", updatedSong)

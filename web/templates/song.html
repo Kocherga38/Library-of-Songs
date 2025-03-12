@@ -3,11 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .Song }}</title>
+    <title>{{.Song}}</title>
 </head>
 <body>
-    <h1>{{ .Song  }}</h1>
-    <h2>Group: {{ .Group }}</h2>
-    <pre>{{ .Lyrics }}</pre>
+    <h1>{{.Song}}</h1>
+    <p>Group: {{.Group}}</p>
+
+    <h2>Verses:</h2>
+    <ul>
+        {{range .Verses}}
+            <li>{{.}}</li>
+        {{else}}
+            <li>No verses available</li>
+        {{end}}
+    </ul>
+    
+    <a href="#">Previous</a> | <a href="#">Next</a>
 </body>
 </html>
