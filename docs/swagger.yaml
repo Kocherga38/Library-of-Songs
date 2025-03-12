@@ -63,5 +63,130 @@ paths:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Create a new song
       tags:
-      - songs
+      - Songs
+  /song/{song}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a song from the database by its name.
+      parameters:
+      - description: Song Name
+        in: path
+        name: song
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Song deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Missing song parameter
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Song not found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Failed to delete song
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Deletes a song
+      tags:
+      - Songs
+    get:
+      consumes:
+      - application/json
+      description: Fetches a song from the database by its name and returns it as
+        an HTML page.
+      parameters:
+      - description: Song Name
+        in: path
+        name: song
+        required: true
+        type: string
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: HTML page with song details
+          schema:
+            type: string
+        "404":
+          description: Song not found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Failed to retrieve song
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Retrieves a song by name
+      tags:
+      - Songs
+    patch:
+      consumes:
+      - application/json
+      description: This endpoint updates the details of a song in the database by
+        its name.
+      parameters:
+      - description: Song Name
+        in: path
+        name: song
+        required: true
+        type: string
+      - description: Updated song information
+        in: body
+        name: song
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated song information
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Invalid input or no fields to update
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Song not found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Failed to update song
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Update a song by name
+      tags:
+      - Songs
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: This endpoint allows you to get all songs from the database.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of songs
+          schema:
+            items:
+              $ref: '#/definitions/models.Song'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Gets all songs
+      tags:
+      - Songs
 swagger: "2.0"

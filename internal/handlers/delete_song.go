@@ -9,6 +9,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// PostSong godoc
+// @Summary Deletes a song
+// @Description Deletes a song from the database by its name.
+// @Tags Songs
+// @Accept json
+// @Produce json
+// @Param song path string true "Song Name"
+// @Success 200 {object} map[string]string "Song deleted successfully"
+// @Failure 400 {object} models.ErrorResponse "Missing song parameter"
+// @Failure 404 {object} models.ErrorResponse "Song not found"
+// @Failure 500 {object} models.ErrorResponse "Failed to delete song"
+// @Router /song/{song} [delete]
 func DeleteSong(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		log.Println("[INFO] Starting song deletion process...")

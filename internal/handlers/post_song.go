@@ -13,8 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @BasePath /song
-
 // PostSong godoc
 // @Summary Create a new song
 // @Description This endpoint allows you to create a new song, page with it and store it in the database.

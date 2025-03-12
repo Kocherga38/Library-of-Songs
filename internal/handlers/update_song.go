@@ -10,6 +10,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UpdateSongByName godoc
+// @Summary Update a song by name
+// @Description This endpoint updates the details of a song in the database by its name.
+// @Tags Songs
+// @Accept json
+// @Produce jsonф
+// @Param song path string true "Song Name"
+// @Param song body map[string]interface{} true "Updated song information"
+// @Success 200 {object} models.Song "Updated song information"
+// @Failure 400 {object} models.ErrorResponse "Invalid input or no fields to update"
+// @Failure 404 {object} models.ErrorResponse "Song not found"
+// @Failure 500 {object} models.ErrorResponse "Failed to update song"
+// @Router /song/{song} [patch]
 func UpdateSongByName(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		songName := c.Param("song")

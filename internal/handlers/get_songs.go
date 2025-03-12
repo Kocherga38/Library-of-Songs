@@ -9,6 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetSongs godoc
+// @Summary Gets all songs
+// @Description This endpoint allows you to get all songs from the database.
+// @Tags Songs
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Song "List of songs"
+// @Failure 500 {object} models.ErrorResponse "Internal Server Error"
+// @Router /songs [get]
 func GetSongs(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		log.Println("[INFO] Starting to fetch all songs...")
